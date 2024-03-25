@@ -30,7 +30,8 @@ What is your query: 写一首七言唐诗
 import Kimi from '@jacksontian/kimi';
 
 const client = new Kimi({
-    apiKey: 'The API key for moonshot AI, do not hard code it here, read it from configuration or enviroment variables'
+    // Do not hard code it here, read it from configuration or enviroment variables
+    apiKey: 'The API key for moonshot AI'
 });
 const response = await client.models();
 ```
@@ -45,4 +46,8 @@ const response = await client.models();
 - `getFile()`
 - `getFileContent()`
 - `deleteFile()`
-- ``
+- `estimateTokenCount()`
+
+## License
+
+The [MIT license](./LICENSE).
