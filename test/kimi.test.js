@@ -7,7 +7,7 @@ const KIMI_API_KEY = process.env.KIMI_API_KEY;
 
 describe('kimi', () => {
   it('chat should ok', async function ()  {
-    this.timeout(20000);
+    this.timeout(60000);
     const client = new Kimi({
       apiKey: KIMI_API_KEY
     });
@@ -26,7 +26,8 @@ describe('kimi', () => {
     assert.ok(content.length > 20);
   });
 
-  it('files should ok', async () => {
+  it('files should ok', async function() {
+    this.timeout(60000);
     const client = new Kimi({
       apiKey: KIMI_API_KEY
     });
