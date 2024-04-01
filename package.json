@@ -11,7 +11,8 @@
     "bin"
   ],
   "directories": {
-    "lib": "lib"
+    "lib": "lib",
+    "test": "test"
   },
   "type": "module",
   "engines": {
