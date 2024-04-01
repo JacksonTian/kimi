@@ -57,9 +57,6 @@ if (!config.model) {
   await saveConfig(config, KIMI_RC_PATH);
 }
 
-// const files = await kimi.files();
-// console.log(files);
-
 // eslint-disable-next-line no-constant-condition
 while (true) {
   const answer = await rl.question('What is your query: ');

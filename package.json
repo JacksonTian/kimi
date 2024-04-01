@@ -6,7 +6,10 @@
   "bin": {
     "kimi": "bin/kimi.js"
   },
-  "files": ["lib", "bin"],
+  "files": [
+    "lib",
+    "bin"
+  ],
   "directories": {
     "lib": "lib"
   },
@@ -15,17 +18,27 @@
     "node": ">= 14"
   },
   "scripts": {
-    "test": "mocha -r spec test/*.test.js"
+    "lint": "eslint --fix lib test",
+    "test": "mocha --reporter spec test/*.test.js",
+    "test-cov": "c8 -r=lcov -r=html -r=text -r=json npm run test"
   },
-  "keywords": ["Moonshot", "AI", "Kimi"],
+  "keywords": [
+    "Moonshot",
+    "AI",
+    "Kimi"
+  ],
   "author": "Jackson Tian",
   "license": "MIT",
   "devDependencies": {
-    "eslint": "^8.57.0"
+    "c8": "^9.1.0",
+    "eslint": "^8.57.0",
+    "mocha": "^10.4.0"
   },
   "dependencies": {
-    "httpx": "^2.3.2",
+    "@alicloud/tea-fileform": "^1.2.0",
+    "httpx": "^3",
     "ini": "^4.1.2",
-    "inquirer": "^9.2.16"
+    "inquirer": "^9.2.16",
+    "mime": "^4.0.1"
   }
 }
