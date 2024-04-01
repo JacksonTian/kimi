@@ -1,5 +1,7 @@
 # The Node.js library and CLI for Moonshot AI
 
+- [![Node.js CI](https://github.com/JacksonTian/kimi/actions/workflows/test.yaml/badge.svg)](https://github.com/JacksonTian/kimi/actions/workflows/test.yaml)
+
 ## Installation/安装
 
 ```sh

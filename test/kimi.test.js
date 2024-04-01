@@ -1,9 +1,13 @@
-import Kimi from '../lib/kimi.js';
 import assert from 'assert';
+import path from 'path';
 import { readAsSSE } from 'httpx';
 import { fileURLToPath } from 'url';
 
+import Kimi from '../lib/kimi.js';
+
 const KIMI_API_KEY = process.env.KIMI_API_KEY;
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 describe('kimi', () => {
   it('chat should ok', async function ()  {
@@ -37,7 +41,8 @@ describe('kimi', () => {
     result.data.forEach((d) => {
       assert.strictEqual(d.status, 'ok');
     });
-    const fileResult = await client.putFile(fileURLToPath(import.meta.resolve('./figures/1906.08237.pdf')), 'file-extract');
+
+    const fileResult = await client.putFile(path.join(__dirname, './figures/1906.08237.pdf'), 'file-extract');
     assert.deepStrictEqual(fileResult.bytes, 761790);
     assert.strictEqual(fileResult.status, 'ok');
     const id = fileResult.id;
@@ -56,7 +61,7 @@ describe('kimi', () => {
     });
 
     try {
-      await client.putFile(fileURLToPath(import.meta.resolve('./figures/invalid_format.txt')), 'file-extract');
+      await client.putFile(path.join(__dirname, './figures/invalid_format.txt'), 'file-extract');
     } catch (ex) {
       assert.strictEqual(ex.message, 'server_error: failed to extract file: unexpected status code: 400, body: {"error_type":"file.no_content","message":"没有解析出内容"}');
       return;
