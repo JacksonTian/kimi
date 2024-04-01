@@ -1,10 +1,31 @@
 import Kimi from '../lib/kimi.js';
 import assert from 'assert';
+import { readAsSSE } from 'httpx';
 import { fileURLToPath } from 'url';
 
 const KIMI_API_KEY = process.env.KIMI_API_KEY;
 
 describe('kimi', () => {
+  it('chat should ok', async function ()  {
+    this.timeout(20000);
+    const client = new Kimi({
+      apiKey: KIMI_API_KEY
+    });
+    const response = await client.chat([
+      {role: 'user', content: 'Hello world'}
+    ], {
+      model: 'moonshot-v1-128k'
+    });
+    let content = '';
+    for await (const event of readAsSSE(response)) {
+      const data = JSON.parse(event.data);
+      if (data.choices[0].finish_reason !== 'stop') {
+        content += data.choices[0].delta.content;
+      }
+    }
+    assert.ok(content.length > 20);
+  });
+
   it('files should ok', async () => {
     const client = new Kimi({
       apiKey: KIMI_API_KEY
@@ -36,7 +57,7 @@ describe('kimi', () => {
     try {
       await client.putFile(fileURLToPath(import.meta.resolve('./figures/invalid_format.txt')), 'file-extract');
     } catch (ex) {
-      assert.strictEqual(ex.message, '1906.08237.pdf');
+      assert.strictEqual(ex.message, 'server_error: failed to extract file: unexpected status code: 400, body: {"error_type":"file.no_content","message":"没有解析出内容"}');
       return;
     }
 
