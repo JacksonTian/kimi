@@ -25,4 +25,6 @@ jobs:
         cache: 'npm'
     - run: npm i
     - run: npm run test-cov
+      env:
+        KIMI_API_KEY: ${{ secrets.API_KEY }}
     - uses: codecov/codecov-action@v3
