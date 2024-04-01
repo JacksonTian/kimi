@@ -22,9 +22,11 @@ describe('kimi', () => {
     });
     let content = '';
     for await (const event of readAsSSE(response)) {
-      const data = JSON.parse(event.data);
-      if (data.choices[0].finish_reason !== 'stop') {
-        content += data.choices[0].delta.content;
+      if (event.data !== '[DONE]') {
+        const data = JSON.parse(event.data);
+        if (data.choices[0].finish_reason !== 'stop') {
+          content += data.choices[0].delta.content;
+        }
       }
     }
     assert.ok(content.length > 20);
