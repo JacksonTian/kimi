@@ -34,7 +34,8 @@ const completions = [
   '.clear',
   '.set_model',
   '.add_file',
-  '.set_verbose'
+  '.set_verbose',
+  '.set_api_key'
 ];
 
 const rl = readline.createInterface({
@@ -48,12 +49,18 @@ const rl = readline.createInterface({
 });
 rl.pause();
 
-if (!config.api_key) {
+async function chooseAPIKey() {
   const apikey = await question({
-    message: 'Please input your kimi api key(you can visit https://platform.moonshot.cn/console/api-keys to get api key):'
+    type: 'password',
+    message: 'Please input your kimi api key(you can visit https://platform.moonshot.cn/console/api-keys to get api key):',
+    mask: '*'
   });
   config.api_key = apikey.trim();
   await saveConfig(config, KIMI_RC_PATH);
+}
+
+if (!config.api_key) {
+  await chooseAPIKey();
 }
 
 const kimi = new Kimi({apiKey: config.api_key});
@@ -113,6 +120,19 @@ while (true) {
   if (answer === '.exit') {
     console.log('Quiting KIMI CLI now. Bye!');
     process.exit(0);
+  }
+
+  if (answer === '.set_api_key') {
+    const apikey = await question({
+      type: 'password',
+      message: 'Please input your new moonshot api key:',
+      mask: '*'
+    });
+
+    config.api_key = apikey;
+    await saveConfig(config, KIMI_RC_PATH);
+    console.log('The new API key is set.');
+    continue;
   }
 
   if (answer === '.set_verbose') {
