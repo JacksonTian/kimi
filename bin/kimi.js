@@ -65,6 +65,23 @@ if (!config.api_key) {
 
 const kimi = new Kimi({apiKey: config.api_key});
 
+function cost(model, tokens) {
+  // moonshot-v1-8k   1M tokens ¥12.00
+  // moonshot-v1-32k  1M tokens ¥24.00
+  // moonshot-v1-128k 1M tokens ¥60.00
+  const map = {
+    'moonshot-v1-8k': 12,
+    'moonshot-v1-32k': 24,
+    'moonshot-v1-128k': 60
+  };
+
+  if (!map) {
+    throw new Error(`Invalid model: ${model}`);
+  }
+
+  return tokens / 1000000 * map[model];
+}
+
 async function chooseModel() {
   const models = await kimi.models();
   const model = await question({
@@ -238,6 +255,7 @@ while (true) {
     const data = JSON.parse(lastEvent.data);
     const choice = data.choices[0];
     const { prompt_tokens, completion_tokens, total_tokens } = choice.usage;
-    console.log(chalk.gray(`[Verbose] request id: ${data.id}, used tokens: ${total_tokens}(${prompt_tokens}/${ completion_tokens })`));
+    console.log(chalk.gray(`[Verbose] request id: ${data.id}`));
+    console.log(chalk.gray(`[Verbose] Used tokens: ${total_tokens}(${prompt_tokens}/${ completion_tokens }), cost ¥${ cost(config.model, total_tokens).toFixed(6) }`));
   }
 }
