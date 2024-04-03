@@ -21,6 +21,24 @@ npm i @jacksontian/kimi # for scripting
 
 ## Usage for CLI
 
+### Set API key
+
+You can visit <https://platform.moonshot.cn/console/api-keys> to get api key.
+
+When you use `kimi` or `kimi-file` first time, will prompt you to set api key.
+
+```bash
+$ kimi
+? Please input your kimi api key(you can visit https://platform.moonshot.cn/console/api-keys to get api key): ***************************************************
+Welcome to KIMI CLI(v1.0.0), type .help for more information.
+Current model is moonshot-v1-32k.
+What is your query: 
+```
+
+Or you can re-set it with `.set_api_key` command.
+
+### Chat with KIMI
+
 ```sh
 $ kimi
 Welcome to KIMI CLI(v1.0.0), type .help for more information.
