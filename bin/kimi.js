@@ -33,6 +33,7 @@ const completions = [
   '.exit',
   '.clear',
   '.set_model',
+  '.add_file',
   '.set_verbose'
 ];
 
@@ -83,6 +84,7 @@ function printHelp() {
   console.log('.clear             clean context');
   console.log('.exit              exit the program');
   console.log('.set_verbose       turn on/off verbose mode');
+  console.log('.add_file          add a file into chat session');
   console.log('.help              show this help');
 }
 
@@ -140,6 +142,27 @@ while (true) {
   if (answer === '.clear') {
     messages.length = 0;
     console.log(`The context is cleared now. Current messages length: ${messages.length}`);
+    continue;
+  }
+
+  if (answer === '.add_file') {
+    const result = await kimi.files();
+    const fileId = await question({
+      type: 'list',
+      message: 'Please select your file:',
+      choices: result.data.map((d) => {
+        return {
+          name: d.filename,
+          value: d.id
+        };
+      }),
+    });
+    const content = await kimi.getFileContent(fileId);
+    messages.unshift({
+      role: 'system',
+      content: JSON.stringify(content)
+    });
+    console.log(`The file ${content.filename} is added into chat session.`);
     continue;
   }
 
