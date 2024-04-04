@@ -65,7 +65,7 @@ describe('kimi', () => {
     try {
       await client.putFile(path.join(__dirname, './figures/invalid_format.txt'), 'file-extract');
     } catch (ex) {
-      assert.strictEqual(ex.message, 'server_error: failed to extract file: unexpected status code: 400, body: {"error_type":"file.no_content","message":"没有解析出内容"}');
+      assert.strictEqual(ex.message, 'invalid_request_error: file size is zero');
       return;
     }
 
