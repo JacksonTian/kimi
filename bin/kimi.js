@@ -2,16 +2,17 @@
 
 import { homedir } from 'os';
 import path from 'path';
+import { fileURLToPath } from 'url';
+import readline from 'readline/promises';
 
 import { readAsSSE } from 'httpx';
-import readline from 'readline/promises';
 import inquirer from 'inquirer';
 import chalk from 'chalk';
+import { loadJSONSync, sleep } from 'kitx';
 
 import Kimi from '../lib/kimi.js';
 import { loadConfig, saveConfig } from '../lib/config.js';
-import { loadJSONSync, sleep } from 'kitx';
-import { fileURLToPath } from 'url';
+
 const KIMI_RC_PATH = path.join(homedir(), '.moonshot_ai_rc');
 
 const config = await loadConfig(KIMI_RC_PATH);
