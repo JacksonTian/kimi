@@ -25,6 +25,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm i
+    - run: npm run lint
     - run: npm run test-cov
       env:
         KIMI_API_KEY: ${{ secrets.API_KEY }}
