@@ -65,7 +65,7 @@ describe('kimi', () => {
     try {
       await client.putFile(path.join(__dirname, './figures/invalid_format.txt'), 'file-extract');
     } catch (ex) {
-      assert.strictEqual(ex.message, 'invalid_request_error: file size is zero');
+      assert.strictEqual(ex.message, 'invalid_request_error: File size is zero, please confirm and re-upload the file');
       return;
     }
 
@@ -96,7 +96,7 @@ describe('kimi', () => {
     ], {
       model: 'moonshot-v1-128k'
     });
-    assert.deepStrictEqual(results, { code: 0, data: { total_tokens: 4 }, scode: '0x0', status: true });
+    assert.deepStrictEqual(results, { code: 0, data: { total_tokens: 8 }, scode: '0x0', status: true });
   });
 
 });
