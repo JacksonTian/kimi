@@ -32,6 +32,67 @@ describe('kimi', () => {
     assert.ok(content.length > 20);
   });
 
+  it('chat with tool should ok', async function ()  {
+    this.timeout(60000);
+    const client = new Kimi({
+      apiKey: KIMI_API_KEY
+    });
+    const response = await client.chat([
+      {role: 'user', content: '3214567是素数吗?'}
+    ], {
+      model: 'moonshot-v1-128k',
+      'tools': [
+        {
+          'type': 'function',
+          'function': {
+            'name': 'CodeRunner',
+            'description': '代码执行器，支持运行 python 和 javascript 代码',
+            'parameters': {
+              'properties': {
+                'language': {
+                  'type': 'string',
+                  'description': 'python or javascript'
+                },
+                'code': {
+                  'type': 'string',
+                  'description': '代码写在这里'
+                }
+              },
+              'type': 'object'
+            }
+          }
+        }
+      ]
+    });
+    let toolCall = null;
+    let content = '';
+    for await (const event of readAsSSE(response)) {
+      if (event.data !== '[DONE]') {
+        const data = JSON.parse(event.data);
+        const choice = data.choices[0];
+        if (choice.finish_reason !== 'tool_calls') {
+          if (choice.delta.content) {
+            content += choice.delta.content;
+          }
+          if (choice.delta.tool_calls) {
+            if (!toolCall) {
+              toolCall = choice.delta.tool_calls[0];
+            } else {
+              toolCall.function.arguments += choice.delta.tool_calls[0].function.arguments;
+            }
+          }
+        }
+      }
+    }
+
+    assert.strictEqual(toolCall.index, 0);
+    assert.strictEqual(toolCall.id, 'CodeRunner:0');
+    assert.strictEqual(toolCall.type, 'function');
+    assert.strictEqual(toolCall.function.name, 'CodeRunner');
+    assert.ok(toolCall.function.arguments.length > 0);
+    assert.ok(content.length > 20);
+  });
+
   it('files should ok', async function() {
     this.timeout(60000);
     const client = new Kimi({
