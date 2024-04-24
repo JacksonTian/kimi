@@ -118,6 +118,10 @@ const pkg = loadJSONSync(path.join(__dirname, '../package.json'));
 console.log(`Welcome to KIMI CLI(v${pkg.version}), type ${chalk.bgGray('.help')} for more information.`);
 console.log(`Current model is ${chalk.bgGreen(config.model)}.`);
 
+const balance = await kimi.getBalance();
+const {available_balance, cash_balance, voucher_balance } = balance.data;
+console.log(`Current balance: ￥${available_balance}(Cash: ￥${cash_balance}, Voucher: ￥${voucher_balance}}).`);
+
 // eslint-disable-next-line no-constant-condition
 while (true) {
   const answer = await rl.question('What is your query: ');

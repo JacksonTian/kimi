@@ -120,6 +120,7 @@ const response = await client.models();
 - `getFileContent()`
 - `deleteFile()`
 - `estimateTokenCount()`
+- `getBalance()`
 
 The detail of parameters can be found at <https://platform.moonshot.cn/docs/api-reference> or [`test/kimi.test.js`](./test/kimi.test.js).
 
