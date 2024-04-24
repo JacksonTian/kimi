@@ -22,7 +22,8 @@
   "scripts": {
     "lint": "eslint --fix lib test",
     "test": "mocha --reporter spec test/*.test.js",
-    "test-cov": "c8 -r=lcov -r=html -r=text -r=json npm run test"
+    "test-cov": "c8 -r=lcov -r=html -r=text -r=json npm run test",
+    "test-dev": "mocha --reporter spec"
   },
   "keywords": [
     "Moonshot",

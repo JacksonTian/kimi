@@ -99,4 +99,18 @@ describe('kimi', () => {
     assert.deepStrictEqual(results, { code: 0, data: { total_tokens: 8 }, scode: '0x0', status: true });
   });
 
+  it('getBalance should ok', async () => {
+    const client = new Kimi({
+      apiKey: KIMI_API_KEY
+    });
+    const results = await client.getBalance();
+    const data = results.data;
+    assert.ok(data.available_balance >= 0);
+    assert.ok(data.cash_balance >= 0);
+    assert.ok(data.voucher_balance >= 0);
+    assert.strictEqual(results.code, 0);
+    assert.strictEqual(results.scode, '0x0');
+    assert.strictEqual(results.status, true);
+  });
+
 });
