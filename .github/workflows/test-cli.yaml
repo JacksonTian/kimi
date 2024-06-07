@@ -4,11 +4,11 @@ on:
   push:
     branches: [ master ]
     paths:
-      - kimi
+      - kimi-cli
   pull_request:
     branches: [ master ]
     paths:
-      - kimi
+      - kimi-cli
 
 jobs:
   build:
@@ -28,16 +28,16 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-        cache-dependency-path: kimi/package-lock.json
+        cache-dependency-path: kimi-cli/package-lock.json
     - run: npm i
-      working-directory: ./kimi
+      working-directory: ./kimi-cli
     - run: npm run lint
-      working-directory: ./kimi
+      working-directory: ./kimi-cli
     - run: npm run test-cov
-      working-directory: ./kimi
+      working-directory: ./kimi-cli
       env:
         KIMI_API_KEY: ${{ secrets.API_KEY }}
     - uses: codecov/codecov-action@v4
       with:
         token: ${{ secrets.CODECOV_TOKEN }} # required
-        directory: ./kimi
+        directory: ./kimi-cli
