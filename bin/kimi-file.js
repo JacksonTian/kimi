@@ -1,36 +1,16 @@
 #!/usr/bin/env node
 
-import { homedir } from 'os';
-import path from 'path';
-
-import inquirer from 'inquirer';
-
 import Kimi from '../lib/kimi.js';
-import { loadConfig, saveConfig } from '../lib/config.js';
+import { getAPIKey } from '../lib/apikey.js';
 
-const KIMI_RC_PATH = path.join(homedir(), '.moonshot_ai_rc');
+const apiKey = await getAPIKey();
 
-const config = await loadConfig(KIMI_RC_PATH);
-
-async function question(prompt) {
-  const answers = await inquirer.prompt([
-    {
-      name: 'question',
-      ...prompt
-    }
-  ]);
-  return answers.question.trim();
+if (!apiKey) {
+  console.log('Can not found api key, please set api key via command kimi first.');
+  process.exit(1);
 }
 
-if (!config.api_key) {
-  const apikey = await question({
-    message: 'Please input your KIMI api key(you can visit https://platform.moonshot.cn/console/api-keys to get api key):'
-  });
-  config.api_key = apikey.trim();
-  await saveConfig(config, KIMI_RC_PATH);
-}
-
-const kimi = new Kimi({apiKey: config.api_key});
+const kimi = new Kimi({apiKey: apiKey});
 
 const [command, ...args] = process.argv.slice(2);
 
