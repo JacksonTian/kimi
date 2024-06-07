@@ -10,7 +10,7 @@ import inquirer from 'inquirer';
 import chalk from 'chalk';
 import { loadJSONSync, sleep } from 'kitx';
 
-import Kimi from '../lib/kimi.js';
+import Kimi from '@jacksontian/kimi';
 import { loadConfig, saveConfig } from '../lib/config.js';
 
 const KIMI_RC_PATH = path.join(homedir(), '.moonshot_ai_rc');

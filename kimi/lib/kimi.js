@@ -13,6 +13,19 @@ export default class Kimi {
     this.temperature = 0;
   }
 
+  async #handleError(url, response) {
+    if (response.statusCode !== 200) {
+      const body = await read(response, 'utf8');
+      const result = JSON.parse(body);
+      const { error } = result;
+      const err = new Error();
+      err.message = `${error.type}: ${error.message}. Access ${url} failed(${response.statusCode})`;
+      err.type = error.type;
+      err.code = response.statusCode;
+      throw err;
+    }
+  }
+
   async chat(messages, options = {}) {
     const body = {
       messages: messages,
@@ -33,16 +46,7 @@ export default class Kimi {
       data: JSON.stringify(body)
     });
 
-    if (response.statusCode !== 200) {
-      const body = await read(response, 'utf8');
-      const result = JSON.parse(body);
-      const { error } = result;
-      const err = new Error();
-      err.message = `${error.type}: ${error.message}. Access ${url} failed(${response.statusCode})`;
-      err.type = error.type;
-      err.code = response.statusCode;
-      throw err;
-    }
+    await this.#handleError(url, response);
 
     return response;
   }
@@ -55,12 +59,14 @@ export default class Kimi {
         'Authorization': `Bearer ${this.apiKey}`
       }
     });
+
+    await this.#handleError(url, response);
+
     const body = await read(response, 'utf8');
     return JSON.parse(body);
   }
   
   async putFile(filePath, purpose) {
-    
     return this.putFileStream(fs.createReadStream(filePath), filePath, purpose);
   }
 
@@ -86,15 +92,11 @@ export default class Kimi {
       },
       data: FileForm.default.toFileForm(form, boundary)
     });
+
+    await this.#handleError(url, response);
+
     const body = await read(response, 'utf8');
-    const result = JSON.parse(body);
-
-    if (result.error) {
-      const err = result.error;
-      throw new Error(`${err.type}: ${err.message}`);
-    }
-
-    return result;
+    return JSON.parse(body);
   }
 
   async getFile(fileId) {
@@ -105,6 +107,9 @@ export default class Kimi {
         'Authorization': `Bearer ${this.apiKey}`
       }
     });
+
+    await this.#handleError(url, response);
+
     const body = await read(response, 'utf8');
     return JSON.parse(body);
   }
@@ -118,15 +123,11 @@ export default class Kimi {
         'Authorization': `Bearer ${this.apiKey}`
       }
     });
+
+    await this.#handleError(url, response);
+
     const body = await read(response, 'utf8');
-    const result = JSON.parse(body);
-
-    if (result.error) {
-      const err = result.error;
-      throw new Error(`${err.type}: ${err.message}`);
-    }
-
-    return result;
+    return JSON.parse(body);
   }
 
   async getFileContent(fileId) {
@@ -137,6 +138,8 @@ export default class Kimi {
         'Authorization': `Bearer ${this.apiKey}`
       }
     });
+    await this.#handleError(url, response);
+
     const body = await read(response, 'utf8');
     return JSON.parse(body);
   }
@@ -149,6 +152,8 @@ export default class Kimi {
         'Authorization': `Bearer ${this.apiKey}`
       }
     });
+    await this.#handleError(url, response);
+
     const body = await read(response, 'utf8');
     return JSON.parse(body);
   }
@@ -168,6 +173,8 @@ export default class Kimi {
         'Authorization': `Bearer ${this.apiKey}`
       }
     });
+    await this.#handleError(url, response);
+
     const body = await read(response, 'utf8');
     return JSON.parse(body);
   }
@@ -179,6 +186,8 @@ export default class Kimi {
         'Authorization': `Bearer ${this.apiKey}`
       }
     });
+    await this.#handleError(url, response);
+
     const body = await read(response, 'utf8');
     return JSON.parse(body);
   }
