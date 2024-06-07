@@ -126,7 +126,7 @@ describe('kimi', () => {
     try {
       await client.putFile(path.join(__dirname, './figures/invalid_format.txt'), 'file-extract');
     } catch (ex) {
-      assert.strictEqual(ex.message, 'invalid_request_error: File size is zero, please confirm and re-upload the file');
+      assert.strictEqual(ex.message, 'invalid_request_error: File size is zero, please confirm and re-upload the file. Access https://api.moonshot.cn/v1/files failed(400)');
       return;
     }
 

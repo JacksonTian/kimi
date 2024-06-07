@@ -1,7 +1,7 @@
 {
-  "name": "@jacksontian/kimi",
-  "version": "1.2.1",
-  "description": "The Node.js library and CLI for Moonshot AI",
+  "name": "@jacksontian/kimi-cli",
+  "version": "1.0.0",
+  "description": "The CLI for Moonshot AI",
   "main": "lib/kimi.js",
   "bin": {
     "kimi": "bin/kimi.js",
@@ -38,12 +38,11 @@
     "mocha": "^10.4.0"
   },
   "dependencies": {
-    "@alicloud/tea-fileform": "^1.2.0",
+    "@jacksontian/kimi": "^1.2.1",
     "chalk": "^5.3.0",
     "httpx": "^3",
     "ini": "^4.1.2",
     "inquirer": "^9.2.16",
-    "kitx": "^2.1.0",
-    "mime": "^4.0.1"
+    "kitx": "^2.1.0"
   }
 }

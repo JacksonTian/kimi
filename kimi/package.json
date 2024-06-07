@@ -1,0 +1,41 @@
+{
+  "name": "@jacksontian/kimi",
+  "version": "1.2.1",
+  "description": "The Node.js library and CLI for Moonshot AI",
+  "main": "lib/kimi.js",
+  "files": [
+    "lib"
+  ],
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">= 14"
+  },
+  "scripts": {
+    "lint": "eslint --fix lib test",
+    "test": "mocha --reporter spec test/*.test.js",
+    "test-cov": "c8 -r=lcov -r=html -r=text -r=json npm run test",
+    "test-dev": "mocha --reporter spec"
+  },
+  "keywords": [
+    "Moonshot",
+    "AI",
+    "Kimi"
+  ],
+  "author": "Jackson Tian",
+  "license": "MIT",
+  "devDependencies": {
+    "c8": "^9.1.0",
+    "eslint": "^8",
+    "mocha": "^10.4.0"
+  },
+  "dependencies": {
+    "@alicloud/tea-fileform": "^1.2.0",
+    "httpx": "^3",
+    "ini": "^4.1.2",
+    "mime": "^4.0.1"
+  }
+}
