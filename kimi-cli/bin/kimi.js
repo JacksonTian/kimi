@@ -4,6 +4,7 @@ import { homedir } from 'os';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import readline from 'readline/promises';
+import process from 'process';
 
 import { readAsSSE } from 'httpx';
 import inquirer from 'inquirer';
@@ -127,7 +128,6 @@ if (voucher_balance > 0) {
   console.log(`Current balance: ￥${available_balance}.`);
 }
 
-// eslint-disable-next-line no-constant-condition
 while (true) {
   const answer = await rl.question('What is your query: ');
   rl.pause();
