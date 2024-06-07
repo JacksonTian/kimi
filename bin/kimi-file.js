@@ -59,7 +59,7 @@ if (!command) {
 } else if (command === 'get') {
   const [fileId] = args;
   const result = await kimi.getFileContent(fileId);
-  console.log(result);
+  console.log(JSON.stringify(result, null, 2));
 } else if (command === 'upload') {
   const [filePath] = args;
   const result = await kimi.putFile(filePath, 'file-extract');
