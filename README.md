@@ -111,16 +111,21 @@ const response = await client.models();
 
 ## API
 
-- `chat()`
-- `models()`
-- `putFile()`
-- `putFileStream()`
-- `files()`
-- `getFile()`
-- `getFileContent()`
-- `deleteFile()`
-- `estimateTokenCount()`
-- `getBalance()`
+- Chat
+  - `chat()`
+  - `models()`
+  - `estimateTokenCount()`
+
+- Files
+  - `putFile()`
+  - `putFileStream()`
+  - `files()`
+  - `getFile()`
+  - `getFileContent()`
+  - `deleteFile()`
+
+- Others
+  - `getBalance()`
 
 The detail of parameters can be found at <https://platform.moonshot.cn/docs/api-reference> or [`test/kimi.test.js`](./test/kimi.test.js).
 

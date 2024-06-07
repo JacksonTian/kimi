@@ -14,8 +14,9 @@ import Kimi from '../lib/kimi.js';
 import { loadConfig, saveConfig } from '../lib/config.js';
 
 const KIMI_RC_PATH = path.join(homedir(), '.moonshot_ai_rc');
+const rcPath = KIMI_RC_PATH;
 
-const config = await loadConfig(KIMI_RC_PATH);
+const config = await loadConfig(rcPath);
 
 async function question(prompt) {
   const answers = await inquirer.prompt([
@@ -57,7 +58,7 @@ async function chooseAPIKey() {
     mask: '*'
   });
   config.api_key = apikey.trim();
-  await saveConfig(config, KIMI_RC_PATH);
+  await saveConfig(config, rcPath);
 }
 
 if (!config.api_key) {
@@ -96,7 +97,7 @@ async function chooseModel() {
   if (model) {
     config.model = model;
   }
-  await saveConfig(config, KIMI_RC_PATH);
+  await saveConfig(config, rcPath);
 }
 
 if (!config.model) {
@@ -152,7 +153,7 @@ while (true) {
     });
 
     config.api_key = apikey;
-    await saveConfig(config, KIMI_RC_PATH);
+    await saveConfig(config, rcPath);
     console.log('The new API key is set.');
     continue;
   }
@@ -169,7 +170,7 @@ while (true) {
     });
 
     config.verbose = verbose === 'true';
-    await saveConfig(config, KIMI_RC_PATH);
+    await saveConfig(config, rcPath);
     console.log(`The verbose mode is turned ${config.verbose ? 'on' : 'off'} now.`);
     continue;
   }
