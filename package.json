@@ -1,6 +1,6 @@
 {
   "name": "@jacksontian/kimi",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "The Node.js library and CLI for Moonshot AI",
   "main": "lib/kimi.js",
   "bin": {
