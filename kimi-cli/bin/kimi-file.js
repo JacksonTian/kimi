@@ -1,6 +1,9 @@
 #!/usr/bin/env node
 
+import process from 'process';
+
 import Kimi from '@jacksontian/kimi';
+
 import { getAPIKey } from '../lib/apikey.js';
 
 const apiKey = await getAPIKey();

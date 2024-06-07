@@ -1,5 +1,7 @@
 import { homedir } from 'os';
 import { join } from 'path';
+import process from 'process';
+
 import { loadConfig } from './config.js';
 
 const KIMI_RC_PATH = join(homedir(), '.moonshot_ai_rc');
