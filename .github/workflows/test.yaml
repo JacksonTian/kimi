@@ -24,11 +24,16 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+        cache-dependency-path: kimi/package-lock.json
     - run: npm i
+      working-directory: ./kimi
     - run: npm run lint
+      working-directory: ./kimi
     - run: npm run test-cov
+      working-directory: ./kimi
       env:
         KIMI_API_KEY: ${{ secrets.API_KEY }}
     - uses: codecov/codecov-action@v4
       with:
         token: ${{ secrets.CODECOV_TOKEN }} # required
+        directory: ./kimi
