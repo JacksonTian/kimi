@@ -121,7 +121,11 @@ console.log(`Current model is ${chalk.bgGreen(config.model)}.`);
 
 const balance = await kimi.getBalance();
 const {available_balance, cash_balance, voucher_balance } = balance.data;
-console.log(`Current balance: ￥${available_balance}(Cash: ￥${cash_balance}, Voucher: ￥${voucher_balance}}).`);
+if (voucher_balance > 0) {
+  console.log(`Current balance: ￥${available_balance}(Cash: ￥${cash_balance}, Voucher: ￥${voucher_balance}).`);
+} else {
+  console.log(`Current balance: ￥${available_balance}.`);
+}
 
 // eslint-disable-next-line no-constant-condition
 while (true) {
@@ -218,7 +222,7 @@ while (true) {
   } catch (ex) {
     if (ex.type === 'rate_limit_reached_error' && ex.code === 429) {
       if (config.verbose) {
-        console.log(chalk.gray('[Verbose] hit rate limit, try again after 3 second'));
+        console.log(chalk.gray('[Verbose] Hit rate limit, try again after 3 second'));
       }
 
       await sleep(3000);
@@ -261,7 +265,7 @@ while (true) {
     const data = JSON.parse(lastEvent.data);
     const choice = data.choices[0];
     const { prompt_tokens, completion_tokens, total_tokens } = choice.usage;
-    console.log(chalk.gray(`[Verbose] request id: ${data.id}`));
+    console.log(chalk.gray(`[Verbose] Request ID: ${data.id}`));
     console.log(chalk.gray(`[Verbose] Used tokens: ${total_tokens}(${prompt_tokens}/${ completion_tokens }), cost ¥${ cost(config.model, total_tokens).toFixed(6) }`));
   }
 }
