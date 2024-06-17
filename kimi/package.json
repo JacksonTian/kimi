@@ -28,7 +28,7 @@
   "author": "Jackson Tian",
   "license": "MIT",
   "devDependencies": {
-    "c8": "^9.1.0",
+    "c8": "^10.1.2",
     "eslint": "^9",
     "mocha": "^10.4.0"
   },
