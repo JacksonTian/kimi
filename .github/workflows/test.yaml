@@ -1,14 +1,14 @@
-name: Node.js CI
+name: Node.js CI for SDK
 
 on:
   push:
     branches: [ master ]
     paths:
-      - kimi
+      - "kimi/**"
   pull_request:
     branches: [ master ]
     paths:
-      - kimi
+      - "kimi/**"
 
 jobs:
   build:
