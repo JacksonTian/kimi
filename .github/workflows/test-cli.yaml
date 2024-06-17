@@ -4,11 +4,11 @@ on:
   push:
     branches: [ master ]
     paths:
-      - kimi-cli/
+      - 'kimi-cli/**'
   pull_request:
     branches: [ master ]
     paths:
-      - kimi-cli/
+      - "kimi-cli/**"
 
 jobs:
   build:
