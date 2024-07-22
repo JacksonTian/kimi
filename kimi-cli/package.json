@@ -35,7 +35,7 @@
   "devDependencies": {
     "c8": "^9.1.0",
     "eslint": "^9",
-    "mocha": "^10.4.0"
+    "mocha": "^10.7.0"
   },
   "dependencies": {
     "@jacksontian/kimi": "^1.2.1",
