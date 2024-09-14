@@ -35,7 +35,7 @@
   "dependencies": {
     "@alicloud/tea-fileform": "^1.2.0",
     "httpx": "^3",
-    "ini": "^4.1.2",
+    "ini": "^5.0.0",
     "mime": "^4.0.1"
   }
 }
