@@ -38,7 +38,8 @@ const completions = [
   '.set_model',
   '.add_file',
   '.set_verbose',
-  '.set_api_key'
+  '.set_api_key',
+  '.set_system'
 ];
 
 const rl = readline.createInterface({
@@ -72,13 +73,18 @@ function cost(model, tokens) {
   // moonshot-v1-8k   1M tokens ¥12.00
   // moonshot-v1-32k  1M tokens ¥24.00
   // moonshot-v1-128k 1M tokens ¥60.00
+  // moonshot-v1-auto
+  if (model === 'moonshot-v1-auto') {
+    return [tokens / 1000000 * 12, tokens / 1000000 * 60];
+  }
+
   const map = {
     'moonshot-v1-8k': 12,
     'moonshot-v1-32k': 24,
     'moonshot-v1-128k': 60
   };
 
-  if (!map) {
+  if (!map[model]) {
     throw new Error(`Invalid model: ${model}`);
   }
 
@@ -108,6 +114,7 @@ if (!config.model) {
 function printHelp() {
   console.log('.set_model         choose model');
   console.log('.set_api_key       set api key');
+  console.log('.set_system        set system prompt');
   console.log('.clear             clean context');
   console.log('.exit              exit the program');
   console.log('.set_verbose       turn on/off verbose mode');
@@ -126,6 +133,13 @@ if (voucher_balance > 0) {
   console.log(`Current balance: ￥${available_balance}(Cash: ￥${cash_balance}, Voucher: ￥${voucher_balance}).`);
 } else {
   console.log(`Current balance: ￥${available_balance}.`);
+}
+
+if (config.system) {
+  messages.push({
+    role: 'system',
+    content: config.system
+  });
 }
 
 while (true) {
@@ -213,6 +227,35 @@ while (true) {
     continue;
   }
 
+  if (answer === '.set_system') {
+    const oldSystem = config.system;
+    const system = await question({
+      type: 'input',
+      message: 'Please input system role content:',
+      mask: '*'
+    });
+
+    config.system = system;
+    await saveConfig(config, rcPath);
+
+    if (oldSystem) {
+      // rewrite system content
+      const systemMessage = messages.find((d) => {
+        return d.role === 'system' && d.content === oldSystem;
+      });
+      if (systemMessage) {
+        systemMessage.content = system;
+      }
+    } else {
+      // append system content
+      messages.unshift({
+        role: 'system',
+        content: config.system
+      });
+    }
+    continue;
+  }
+
   messages.push({'role': 'user', 'content': answer});
   let response;
   try {
@@ -266,6 +309,13 @@ while (true) {
     const choice = data.choices[0];
     const { prompt_tokens, completion_tokens, total_tokens } = choice.usage;
     console.log(chalk.gray(`[Verbose] Request ID: ${data.id}`));
-    console.log(chalk.gray(`[Verbose] Used tokens: ${total_tokens}(${prompt_tokens}/${ completion_tokens }), cost ¥${ cost(config.model, total_tokens).toFixed(6) }`));
+    const fee = cost(config.model, total_tokens);
+    let costText;
+    if (Array.isArray(fee)) {
+      costText = `¥${ fee[0].toFixed(6) } to ¥${ fee[1].toFixed(6) }`;
+    } else {
+      costText = `¥${ fee.toFixed(6) }`;
+    }
+    console.log(chalk.gray(`[Verbose] Used tokens: ${total_tokens}(${prompt_tokens}/${ completion_tokens }), cost ${costText}`));
   }
 }
