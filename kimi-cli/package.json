@@ -41,7 +41,7 @@
     "@jacksontian/kimi": "^1.2.1",
     "chalk": "^5.3.0",
     "httpx": "^3",
-    "ini": "^4.1.2",
+    "ini": "^5.0.0",
     "inquirer": "^9.2.16",
     "kitx": "^2.1.0"
   }
