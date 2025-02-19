@@ -101,6 +101,21 @@ What is your query: .set_model
 The model is switched to moonshot-v1-32k now.
 ```
 
+### Use Vision model
+
+You can use `.add_image` command to add image into chat session:
+
+```bash
+Welcome to KIMI CLI(v1.1.0), type .help for more information.
+Current model is kimi-latest.
+What is your query: .add_image
+? Please type your image path: ~/Downloads/kimi-logo.png
+The image '/Users/x/Downloads/kimi-logo.png' is added into chat session.
+What is your query: 解读一下这个图片
+解读一下这个图片
+这个图片展示了一个字母“K”的设计。字母“K”是大写的，采用了一种现代、简洁的字体风格。字母“K”的右上角有一个蓝色的小圆点，这个圆点可能是设计的一部分，用来增加视觉上的趣味性或作为品牌标识的一部分。背景是黑色的，使得白色的字母“K”和蓝色的圆点更加突出。整体设计简洁而现代，可能用于品牌标识、标志或图标设计。
+```
+
 ## License
 
 The [MIT license](./LICENSE).
