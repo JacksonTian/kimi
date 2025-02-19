@@ -13,6 +13,9 @@ import { loadJSONSync, sleep } from 'kitx';
 
 import Kimi from '@jacksontian/kimi';
 import { loadConfig, saveConfig } from '../lib/config.js';
+import { readFile } from 'fs/promises';
+import { getMIME } from '../lib/mime.js';
+import { isVisionModel } from '../lib/helper.js';
 
 const KIMI_RC_PATH = path.join(homedir(), '.moonshot_ai_rc');
 const rcPath = KIMI_RC_PATH;
@@ -39,7 +42,8 @@ const completions = [
   '.add_file',
   '.set_verbose',
   '.set_api_key',
-  '.set_system'
+  '.set_system',
+  '.add_image'
 ];
 
 const rl = readline.createInterface({
@@ -70,6 +74,7 @@ if (!config.api_key) {
 const kimi = new Kimi({apiKey: config.api_key});
 
 function cost(model, tokens) {
+  // set https://platform.moonshot.cn/docs/pricing/chat#%E8%AE%A1%E8%B4%B9%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5
   // moonshot-v1-8k   1M tokens ¥12.00
   // moonshot-v1-32k  1M tokens ¥24.00
   // moonshot-v1-128k 1M tokens ¥60.00
@@ -78,10 +83,17 @@ function cost(model, tokens) {
     return [tokens / 1000000 * 12, tokens / 1000000 * 60];
   }
 
+  if (model === 'kimi-latest') {
+    return [tokens / 1000000 * 12, tokens / 1000000 * 60];
+  }
+
   const map = {
     'moonshot-v1-8k': 12,
     'moonshot-v1-32k': 24,
-    'moonshot-v1-128k': 60
+    'moonshot-v1-128k': 60,
+    'moonshot-v1-8k-vision-preview': 12,
+    'moonshot-v1-32k-vision-preview': 24,
+    'moonshot-v1-128k-vision-preview': 60,
   };
 
   if (!map[model]) {
@@ -112,14 +124,15 @@ if (!config.model) {
 }
 
 function printHelp() {
-  console.log('.set_model         choose model');
-  console.log('.set_api_key       set api key');
-  console.log('.set_system        set system prompt');
-  console.log('.clear             clean context');
-  console.log('.exit              exit the program');
-  console.log('.set_verbose       turn on/off verbose mode');
-  console.log('.add_file          add a file into chat session');
-  console.log('.help              show this help');
+  console.log('  .set_model         choose model');
+  console.log('  .set_api_key       set api key');
+  console.log('  .set_system        set system prompt');
+  console.log('  .clear             clean context');
+  console.log('  .exit              exit the program');
+  console.log('  .set_verbose       turn on/off verbose mode');
+  console.log('  .add_file          add a file into chat session');
+  console.log('  .add_image         add an image into chat session');
+  console.log('  .help              show this help');
 }
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -141,6 +154,9 @@ if (config.system) {
     content: config.system
   });
 }
+
+// for vision
+const images = [];
 
 while (true) {
   const answer = await rl.question('What is your query: ');
@@ -227,6 +243,22 @@ while (true) {
     continue;
   }
 
+  if (answer === '.add_image') {
+    let imagePath = await question({
+      type: 'input',
+      message: 'Please type your image path:',
+    });
+
+    if (imagePath.startsWith('~')) {
+      imagePath = path.join(homedir(), imagePath.slice(1));
+    }
+
+    const base64 = await readFile(imagePath, 'base64');
+    console.log(`The image '${imagePath}' is added into chat session.`);
+    images.push(`data:${getMIME(path.extname(imagePath))};base64,${base64}`);
+    continue;
+  }
+
   if (answer === '.set_system') {
     const oldSystem = config.system;
     const system = await question({
@@ -256,7 +288,30 @@ while (true) {
     continue;
   }
 
-  messages.push({'role': 'user', 'content': answer});
+  if (images.length > 0 && isVisionModel(config.model)) {
+    messages.push({
+      'role': 'user',
+      'content': [
+        ...images.map((d) => {
+          return {
+            'type': 'image_url',
+            'image_url': {
+              'url': d
+            }
+          };
+        }),
+        {
+          'type': 'text',
+          'text': answer
+        }
+      ]
+    });
+    // 清理已保存的图片
+    images.length = 0;
+  } else {
+    messages.push({'role': 'user', 'content': answer});
+  }
+
   let response;
   try {
     response = await kimi.chat(messages, {
