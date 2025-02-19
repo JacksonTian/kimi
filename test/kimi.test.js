@@ -67,6 +67,7 @@ describe('kimi', () => {
     let toolCall = null;
     let content = '';
     for await (const event of readAsSSE(response)) {
+      console.log(event);
       if (event.data !== '[DONE]') {
         const data = JSON.parse(event.data);
         const choice = data.choices[0];
@@ -90,6 +91,7 @@ describe('kimi', () => {
     assert.strictEqual(toolCall.type, 'function');
     assert.strictEqual(toolCall.function.name, 'CodeRunner');
     assert.ok(toolCall.function.arguments.length > 0);
+    console.log(content);
     assert.ok(content.length > 20);
   });
 
@@ -144,7 +146,8 @@ describe('kimi', () => {
     assert.deepStrictEqual(names, [
       'moonshot-v1-128k',
       'moonshot-v1-32k',
-      'moonshot-v1-8k'
+      'moonshot-v1-8k',
+      'moonshot-v1-auto'
     ]);
   });
 
@@ -157,7 +160,15 @@ describe('kimi', () => {
     ], {
       model: 'moonshot-v1-128k'
     });
-    assert.deepStrictEqual(results, { code: 0, data: { total_tokens: 8 }, scode: '0x0', status: true });
+    assert.deepStrictEqual(results, {
+      code: 0,
+      data: {
+        multimodal: false,
+        total_tokens: 8
+      },
+      scode: '0x0',
+      status: true
+    });
   });
 
   it('getBalance should ok', async () => {
@@ -172,6 +183,15 @@ describe('kimi', () => {
     assert.strictEqual(results.code, 0);
     assert.strictEqual(results.scode, '0x0');
     assert.strictEqual(results.status, true);
+  });
+
+  it('caches should ok', async function() {
+    this.timeout(60000);
+    const client = new Kimi({
+      apiKey: KIMI_API_KEY
+    });
+    const result = await client.getCaches();
+    console.log(result);
   });
 
 });
