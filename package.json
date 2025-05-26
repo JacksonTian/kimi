@@ -30,7 +30,7 @@
   "devDependencies": {
     "c8": "^10.1.2",
     "eslint": "^9",
-    "mocha": "^10.4.0"
+    "mocha": "^11.5.0"
   },
   "dependencies": {
     "@alicloud/tea-fileform": "^1.2.0",
